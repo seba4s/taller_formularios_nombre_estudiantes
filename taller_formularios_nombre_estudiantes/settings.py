@@ -1,7 +1,11 @@
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 
 SECRET_KEY = "django-insecure-cambia-esta-clave-en-produccion"
@@ -56,12 +60,29 @@ WSGI_APPLICATION = "taller_formularios_nombre_estudiantes.wsgi.application"
 ASGI_APPLICATION = "taller_formularios_nombre_estudiantes.asgi.application"
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# If DB_ENGINE=postgres (or POSTGRES_DB is defined), Django uses PostgreSQL.
+USE_POSTGRES = os.getenv("DB_ENGINE", "").lower() == "postgres" or bool(
+    os.getenv("POSTGRES_DB")
+)
+
+if USE_POSTGRES:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB", "taller_formularios"),
+            "USER": os.getenv("POSTGRES_USER", "postgres"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+            "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
+            "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [
