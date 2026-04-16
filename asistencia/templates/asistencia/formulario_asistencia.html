@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de asistencia</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f4efe6;
+            --panel: #fffdfa;
+            --primary: #0f5c4d;
+            --primary-dark: #0a4036;
+            --accent: #d7a86e;
+            --text: #1f2933;
+            --muted: #52606d;
+            --border: #d9e2ec;
+            --error: #b42318;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(215, 168, 110, 0.25), transparent 28%),
+                linear-gradient(180deg, #fcfaf6 0%, var(--bg) 100%);
+            color: var(--text);
+        }
+
+        .wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+
+        .card {
+            width: min(100%, 760px);
+            background: var(--panel);
+            border: 1px solid rgba(15, 92, 77, 0.08);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(31, 41, 51, 0.12);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 32px 32px 20px;
+            background: linear-gradient(135deg, rgba(15, 92, 77, 0.97), rgba(10, 64, 54, 0.9));
+            color: #ffffff;
+        }
+
+        .card-header h1 {
+            margin: 0 0 8px;
+            font-size: clamp(2rem, 4vw, 2.5rem);
+        }
+
+        .card-header p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        form {
+            padding: 28px 32px 32px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .field-full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+            font: inherit;
+            color: var(--text);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(215, 168, 110, 0.18);
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-top: 30px;
+        }
+
+        .checkbox-field input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+        }
+
+        .errorlist,
+        .error-text {
+            margin: 0;
+            color: var(--error);
+            font-size: 0.92rem;
+        }
+
+        .non-field-errors {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(180, 35, 24, 0.08);
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .help-text {
+            color: var(--muted);
+            max-width: 420px;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 14px 26px;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 640px) {
+            .card-header,
+            form {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .checkbox-field {
+                padding-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="wrapper">
+        <section class="card">
+            <header class="card-header">
+                <h1>Registro de asistencia</h1>
+                <p>Completa la informacion del estudiante para registrar su ingreso y salida.</p>
+            </header>
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="non-field-errors">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="grid">
+                    {% for field in form %}
+                        <div class="field {% if field.name == 'observaciones' %}field-full{% endif %} {% if field.name == 'presente' %}checkbox-field{% endif %}">
+                            {% if field.name == 'presente' %}
+                                {{ field }}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% else %}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                            {% endif %}
+
+                            {% if field.help_text %}
+                                <small>{{ field.help_text }}</small>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <p class="error-text">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="actions">
+                    <p class="help-text">Verifica que los horarios y el correo electronico esten correctos antes de enviar el formulario.</p>
+                    <button type="submit">Guardar asistencia</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
