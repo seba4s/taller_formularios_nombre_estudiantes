@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }} - Solicitudes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container-confirmation {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            margin: auto;
+            text-align: center;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        
+        .success-title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .success-subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .solicitud-summary {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .summary-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .summary-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .summary-value {
+            color: #333;
+            font-size: 16px;
+            margin-top: 5px;
+            word-break: break-word;
+        }
+        
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        
+        .btn-secondary-custom {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 28px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary-custom:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .info-box {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            color: #004085;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        .no-solicitud {
+            color: #dc3545;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-confirmation">
+        <div class="success-icon">✓</div>
+        
+        <div class="success-title">¡Solicitud Registrada Exitosamente!</div>
+        
+        <div class="success-subtitle">
+            Tu solicitud ha sido recibida y procesada correctamente.
+            <br>
+            Puedes ver los detalles de tu solicitud a continuación.
+        </div>
+        
+        {% if solicitud %}
+            <div class="solicitud-summary">
+                <div class="summary-item">
+                    <div class="summary-label">Número de Solicitud</div>
+                    <div class="summary-value">{{ solicitud.id }}</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Nombre del Solicitante</div>
+                    <div class="summary-value">{{ solicitud.nombre_solicitante }}</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Documento de Identidad</div>
+                    <div class="summary-value">{{ solicitud.documento_identidad }}</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Correo Electrónico</div>
+                    <div class="summary-value">{{ solicitud.correo_electronico }}</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Teléfono de Contacto</div>
+                    <div class="summary-value">{{ solicitud.telefono_contacto }}</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Tipo de Solicitud</div>
+                    <div class="summary-value">
+                        <span style="background: #667eea; color: white; padding: 3px 10px; border-radius: 20px; font-size: 12px;">
+                            {{ solicitud.get_tipo_solicitud_display }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Asunto</div>
+                    <div class="summary-value">{{ solicitud.asunto }}</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Descripción</div>
+                    <div class="summary-value">{{ solicitud.descripcion_detallada|truncatewords:30 }}</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Fecha de Solicitud</div>
+                    <div class="summary-value">{{ solicitud.fecha_solicitud|date:"d/m/Y" }}</div>
+                </div>
+                
+                {% if solicitud.archivo_adjunto %}
+                    <div class="summary-item">
+                        <div class="summary-label">Archivo Adjunto</div>
+                        <div class="summary-value">
+                            ✓ Se ha registrado un archivo adjunto
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="info-box">
+                <strong>Información importante:</strong> Hemos registrado tu solicitud con el número <strong>#{{ solicitud.id }}</strong>. 
+                Conserva este número para futuras consultas o referencias sobre tu solicitud.
+            </div>
+        {% else %}
+            <div class="no-solicitud">
+                ⚠️ No hay solicitudes registradas en el sistema.
+            </div>
+        {% endif %}
+        
+        <div class="action-buttons">
+            <a href="{% url 'solicitudes:registro_solicitud' %}" class="btn-primary-custom">
+                + Crear Nueva Solicitud
+            </a>
+            <a href="/" class="btn-secondary-custom">
+                Volver al Inicio
+            </a>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
