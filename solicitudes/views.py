@@ -29,7 +29,7 @@ def registro_solicitud(request):
             )
             
             # Redirigir a la página de confirmación
-            return redirect('confirmacion_solicitud')
+            return redirect('solicitudes:confirmacion_solicitud')
         else:
             # Mensaje de error si el formulario no es válido
             messages.error(
