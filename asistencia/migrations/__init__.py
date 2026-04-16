@@ -1,1 +1,0 @@
-"""Paquete de migraciones para la aplicacion asistencia."""
