@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }} - Solicitudes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container-form {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            margin: auto;
+        }
+        
+        .form-title {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .form-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px 12px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            outline: none;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .alert {
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-form">
+        <div class="form-title">{{ titulo }}</div>
+        <div class="form-subtitle">Por favor, completa el formulario con tus datos</div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="POST" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            
+            <!-- Información del Solicitante -->
+            <fieldset style="margin-bottom: 30px;">
+                <legend style="color: #667eea; font-weight: bold; margin-bottom: 20px;">
+                    Información del Solicitante
+                </legend>
+                
+                <div class="form-group">
+                    <label for="id_nombre_solicitante" class="form-label required">
+                        Nombre Completo
+                    </label>
+                    {{ form.nombre_solicitante }}
+                    {% if form.nombre_solicitante.errors %}
+                        <span class="error-message">
+                            {{ form.nombre_solicitante.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_documento_identidad" class="form-label required">
+                        Documento de Identidad
+                    </label>
+                    {{ form.documento_identidad }}
+                    {% if form.documento_identidad.errors %}
+                        <span class="error-message">
+                            {{ form.documento_identidad.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_correo_electronico" class="form-label required">
+                        Correo Electrónico
+                    </label>
+                    {{ form.correo_electronico }}
+                    {% if form.correo_electronico.errors %}
+                        <span class="error-message">
+                            {{ form.correo_electronico.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_telefono_contacto" class="form-label required">
+                        Teléfono de Contacto
+                    </label>
+                    {{ form.telefono_contacto }}
+                    {% if form.telefono_contacto.errors %}
+                        <span class="error-message">
+                            {{ form.telefono_contacto.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+            </fieldset>
+            
+            <!-- Detalles de la Solicitud -->
+            <fieldset style="margin-bottom: 30px;">
+                <legend style="color: #667eea; font-weight: bold; margin-bottom: 20px;">
+                    Detalles de la Solicitud
+                </legend>
+                
+                <div class="form-group">
+                    <label for="id_tipo_solicitud" class="form-label required">
+                        Tipo de Solicitud
+                    </label>
+                    {{ form.tipo_solicitud }}
+                    {% if form.tipo_solicitud.errors %}
+                        <span class="error-message">
+                            {{ form.tipo_solicitud.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_asunto" class="form-label required">
+                        Asunto
+                    </label>
+                    {{ form.asunto }}
+                    {% if form.asunto.errors %}
+                        <span class="error-message">
+                            {{ form.asunto.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_descripcion_detallada" class="form-label required">
+                        Descripción Detallada
+                    </label>
+                    {{ form.descripcion_detallada }}
+                    {% if form.descripcion_detallada.errors %}
+                        <span class="error-message">
+                            {{ form.descripcion_detallada.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+            </fieldset>
+            
+            <!-- Archivo Adjunto -->
+            <fieldset style="margin-bottom: 30px;">
+                <legend style="color: #667eea; font-weight: bold; margin-bottom: 20px;">
+                    Archivo Adjunto (Opcional)
+                </legend>
+                
+                <div class="form-group">
+                    <label for="id_archivo_adjunto" class="form-label">
+                        Adjuntar documento
+                    </label>
+                    <small class="d-block text-muted mb-2">
+                        Formatos permitidos: PDF, DOC, DOCX, TXT, JPG, PNG, JPEG
+                    </small>
+                    {{ form.archivo_adjunto }}
+                    {% if form.archivo_adjunto.errors %}
+                        <span class="error-message">
+                            {{ form.archivo_adjunto.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+            </fieldset>
+            
+            <!-- Botón de Envío -->
+            <button type="submit" class="btn-submit">
+                Enviar Solicitud
+            </button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <small style="color: #999;">
+                Los campos marcados con <span style="color: #dc3545;">*</span> son obligatorios.
+            </small>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
